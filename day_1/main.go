@@ -69,7 +69,7 @@ var numbersInText = []string{
 	"five",
 	"six",
 	"seven",
-	"height",
+	"eight",
 	"nine",
 	"ten",
 }
