@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"unicode"
 )
 
@@ -14,7 +15,12 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(file)
 
 	scanner := bufio.NewScanner(file)
 	lineCounter := 0
@@ -49,12 +55,22 @@ func getFirstDigit(text string, reverse bool) (string, error) {
 			elem := int32(text[index])
 			if unicode.IsNumber(elem) {
 				return string(elem), nil
+			} else {
+				ret := isDigitInText(text, index)
+				if ret != "" {
+					return ret, nil
+				}
 			}
 		}
 	} else {
-		for _, elem := range text {
+		for index, elem := range text {
 			if unicode.IsNumber(elem) {
 				return string(elem), nil
+			} else {
+				ret := isDigitInText(text, index)
+				if ret != "" {
+					return ret, nil
+				}
 			}
 		}
 	}
@@ -81,8 +97,7 @@ func isDigitInText(text string, startIndex int) string {
 		if len(substring) < len(currentTextNumber) {
 			continue
 		}
-		substringTrimmed := substring[:len(currentTextNumber)]
-		if currentTextNumber == substringTrimmed {
+		if strings.HasPrefix(substring, currentTextNumber) {
 			return strconv.Itoa(i + 1)
 		}
 	}
