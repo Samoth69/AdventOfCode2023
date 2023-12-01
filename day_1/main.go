@@ -77,6 +77,14 @@ var numbersInText = []string{
 func isDigitInText(text string, startIndex int) string {
 	substring := text[startIndex:]
 	for i := 0; i < len(numbersInText); i++ {
-
+		currentTextNumber := numbersInText[i]
+		if len(substring) < len(currentTextNumber) {
+			continue
+		}
+		substringTrimmed := substring[:len(currentTextNumber)]
+		if currentTextNumber == substringTrimmed {
+			return strconv.Itoa(i + 1)
+		}
 	}
+	return ""
 }
