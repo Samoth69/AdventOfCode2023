@@ -18,7 +18,7 @@ func Run() {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}(file)
 
@@ -28,25 +28,34 @@ func Run() {
 	for scanner.Scan() {
 		text := scanner.Text()
 
-		first, err := getFirstDigit(text, false)
+		ret, err := decodeNumber(text)
 		if err != nil {
-			log.Fatalf("error on line %d : %s", lineCounter, err)
-		}
-		last, err := getFirstDigit(text, true)
-		if err != nil {
-			log.Fatalf("error on line %d : %s", lineCounter, err)
+			log.Fatalln(err)
 		}
 
-		combined := first + last
-
-		decodedNumber, err := strconv.Atoi(combined)
-		if err != nil {
-			log.Fatal(err)
-		}
-		sum += decodedNumber
+		sum += ret
 		lineCounter++
 	}
 	log.Printf("%d", sum)
+}
+
+func decodeNumber(text string) (int, error) {
+	first, err := getFirstDigit(text, false)
+	if err != nil {
+		return 0, err
+	}
+	last, err := getFirstDigit(text, true)
+	if err != nil {
+		return 0, err
+	}
+
+	combined := first + last
+
+	decodedNumber, err := strconv.Atoi(combined)
+	if err != nil {
+		return 0, err
+	}
+	return decodedNumber, nil
 }
 
 func getFirstDigit(text string, reverse bool) (string, error) {
@@ -92,13 +101,16 @@ var numbersInText = []string{
 
 func isDigitInText(text string, startIndex int) string {
 	substring := text[startIndex:]
-	for i := 0; i < len(numbersInText); i++ {
-		currentTextNumber := numbersInText[i]
-		if len(substring) < len(currentTextNumber) {
-			continue
-		}
-		if strings.HasPrefix(substring, currentTextNumber) {
-			return strconv.Itoa(i + 1)
+	if len(substring) > 2 {
+		for i := 0; i < len(numbersInText); i++ {
+			currentTextNumber := numbersInText[i]
+			// fast skipping
+			if currentTextNumber[0] != substring[0] {
+				continue
+			}
+			if strings.HasPrefix(substring, currentTextNumber) {
+				return strconv.Itoa(i + 1)
+			}
 		}
 	}
 	return ""

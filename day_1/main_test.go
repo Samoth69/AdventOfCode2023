@@ -1,8 +1,44 @@
 package day_1
 
 import (
+	"bufio"
+	"fmt"
+	"os"
 	"testing"
 )
+
+func BenchmarkDecodeNumber(b *testing.B) {
+	file, err := os.OpenFile("../data/01.txt", os.O_RDONLY, 0)
+	if err != nil {
+		panic(err)
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(file)
+
+	arr := make([]string, 0)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		arr = append(arr, scanner.Text())
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		for index, _ := range arr {
+			ret, err := decodeNumber(arr[index])
+			if err != nil {
+				panic(err)
+			}
+			if ret == 0 {
+				panic(fmt.Errorf("invalid return value"))
+			}
+		}
+	}
+}
 
 func TestGetFirstDigit(t *testing.T) {
 	type args struct {
@@ -40,7 +76,7 @@ func TestGetFirstDigit(t *testing.T) {
 	}
 }
 
-func Test_isDigitInText(t *testing.T) {
+func TestIsDigitInText(t *testing.T) {
 	type args struct {
 		text       string
 		startIndex int
