@@ -13,7 +13,6 @@ func TestGetFirstDigit(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
 		{"01", args{"test1test2", false}, "1", false},
 		{"02", args{"test1test2", true}, "2", false},
 		{"03", args{"testtest", false}, "", true},
@@ -34,6 +33,28 @@ func TestGetFirstDigit(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("getFirstDigit() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_isDigitInText(t *testing.T) {
+	type args struct {
+		text       string
+		startIndex int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"01", args{"one", 0}, "1"},
+		{"02", args{"one", 1}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isDigitInText(tt.args.text, tt.args.startIndex); got != tt.want {
+				t.Errorf("isDigitInText() = %v, want %v", got, tt.want)
 			}
 		})
 	}
