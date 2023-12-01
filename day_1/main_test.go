@@ -50,6 +50,10 @@ func Test_isDigitInText(t *testing.T) {
 	}{
 		{"01", args{"one", 0}, "1"},
 		{"02", args{"one", 1}, ""},
+		{"03", args{"onetwo", 0}, "1"},
+		{"04", args{"onetwo", 1}, "2"},
+		{"05", args{"onetwo", 2}, "2"},
+		{"06", args{"onetwo", 3}, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
