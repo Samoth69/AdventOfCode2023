@@ -18,7 +18,10 @@ func Run() {
 
 	sum := 0
 	for text := range c {
-		ret := processLinePart2(text)
+		ret, err := decodeLinePart2(text)
+		if err != nil {
+			log.Fatalln(err)
+		}
 		if ret > 0 {
 			sum += ret
 		}
@@ -96,17 +99,6 @@ func decodePartyPart1(text string) (int, error) {
 		}
 	}
 	return 0, nil
-}
-
-func processLinePart2(line string) int {
-	ret, err := decodeLinePart2(line)
-	if err != nil {
-		panic(err)
-	}
-	if ret != 0 {
-		return ret
-	}
-	return -1
 }
 
 func decodeLinePart2(line string) (int, error) {

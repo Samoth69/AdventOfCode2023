@@ -1,6 +1,8 @@
 package day_2
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_decodePartyPart1(t *testing.T) {
 	type args struct {
@@ -89,5 +91,14 @@ func Test_decodeLinePart2(t *testing.T) {
 				t.Errorf("decodeLinePart2() got = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func Benchmark_decodeLinePart2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, err := decodeLinePart2("Game 37: 16 blue, 5 green, 18 red; 3 blue, 14 green, 1 red; 4 blue, 3 green, 14 red; 12 green, 7 red, 15 blue; 15 green, 11 blue, 2 red; 8 blue, 13 green, 6 red")
+		if err != nil {
+			panic(err)
+		}
 	}
 }
