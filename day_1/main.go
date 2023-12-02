@@ -1,33 +1,27 @@
 package day_1
 
 import (
-	"bufio"
+	"AdventOfCode2023/utils"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 	"unicode"
 )
 
 func Run() {
-	file, err := os.OpenFile("data/01.txt", os.O_RDONLY, 0)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(file)
-
-	scanner := bufio.NewScanner(file)
 	lineCounter := 0
 	sum := 0
-	for scanner.Scan() {
-		text := scanner.Text()
 
+	c := make(chan string, 10)
+	go func() {
+		err := utils.ReadFileLineByLine("data/01.txt", c)
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}()
+
+	for text := range c {
 		ret, err := decodeNumber(text)
 		if err != nil {
 			log.Fatalln(err)
